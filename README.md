@@ -7,5 +7,11 @@
 This project is separated into REST API and Web both using .net core 3.1.
 <h3><strong>Technologies&nbsp;</strong></h3>
 <p>C#, ASP .NET Core, JavaScript, JQuery, HTML, CSS, Bootstrap, Entity Framework Core, MSSQL, LINQ</p>
+<p><strong>Further Enhancements</strong></p>
+<ul>
+    <li>Payroll Upon Workload</li>
+    <li>Financing and email notification</li>
+    <li>Performance &amp; Bonus reports</li>
+</ul>
 
 
