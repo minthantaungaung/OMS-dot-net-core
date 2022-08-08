@@ -1,0 +1,16 @@
+﻿.Rlist {
+    border: none;
+    transition: transform .2s;
+    box-shadow: 0px 2px 10px 0px whitesmoke;
+}
+.Rlist:hover {
+    transform: scale(1.01);
+}
+body {
+    background: #EFF4F7;
+}
+.icon-redhover1:hover{
+   background-color:whitesmoke;
+   border:1px solid red;
+   margin-bottom:-2px;
+}

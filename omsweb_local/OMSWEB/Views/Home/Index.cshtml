@@ -1,0 +1,280 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<head>
+    <link href="~/css/StyleSheet.css" rel="stylesheet" />
+    <link href="~/lib/picker/picker.css" rel="stylesheet" />
+    <link href="~/lib/sweetalert2/sweetalert2.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container  mt-5">
+        <div class="card rounded-0 border-info">
+            <div class="card-body  pr-sm-0 pt-sm-2 pb-sm-0 pb-sm-0 ">
+                <form id="addRecord">
+                    <div class="text-danger"></div>
+                    <div class="row">
+                        <div class="col form-group">
+                            <input id="Detail" type="text" size="50" placeholder="Detail" class="form-control bg-transparent  border-top-0 border-right-0 border-left-0 rounded-0" />
+                        </div>
+                        <div class="col form-group">
+                            <select id="Project" class="form-control bg-transparent  border-top-0 border-right-0 border-left-0 rounded-0">
+                                <option value="">Project</option>
+                            </select>
+                        </div>
+                        <div class="col form-group">
+                            <input id="Date" type="" placeholder="Date" class="form-control  bg-transparent border-top-0 border-right-0 border-left-0 rounded-0" />
+                        </div>
+
+                        <div class="col form-group">
+                            <input id="StartTime" type="text" placeholder="Start" class="tcal form-control bg-transparent js-time-picker startTime  border-top-0 border-right-0 border-left-0 rounded-0" />
+                        </div>
+                        <div class="col form-group">
+                            <input id="EndTime" type="text" placeholder="End" class="tcal form-control bg-transparent js-time-picker endTime  border-top-0 border-right-0 border-left-0 rounded-0" />
+                        </div>
+                        <div class="col form-group">
+                            <input id="WorkingHr" type="text" placeholder="Total" disabled class="form-control bg-transparent border-top-0 border-right-0 border-left-0 rounded-0" />
+
+                        </div>
+                        <div class="col form-group">
+                            <div class="form-check form-switch mt-3">
+                                <input class="form-check-input" placeholder="" type="checkbox" id="flexSwitchCheckDefault">
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Billable</label>
+                            </div>
+                        </div>
+                        <div class="col form-group">
+                            <div class="btn-toolbar mt-2" role="toolbar" aria-label="Toolbar with button groups">
+                                <div class="btn-group mr-2" role="group" aria-label="First group">
+                                    <button type="button" class="btn btn-primary">
+                                        <i class="fas fa-plus" onclick="addEntry()"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-cyan">
+                                        <i class="fas fa-play" onclick="()"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <br />
+        <div id="list">
+
+        </div>
+    </div>
+</body>
+@section Scripts{
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/picker/picker.js"></script>
+    <script src="~/lib/sweetalert2/sweetalert2.min.js"></script>
+    <script>
+
+    $(function () {
+        list();
+        timepicker();
+    });
+
+    function list() {
+        $.ajax({
+            cache: false,
+            url: '@Url.Action("_trackRecord", "Home")',
+            data: {},
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                $('#list').empty().append(data);
+                timepicker();
+            },
+            complete: function () {
+                $('#list input').change(function (e) {
+                    var CID = e.target.id;
+                    var arr = CID.split('-');
+                    var name = arr[0].toString();
+                    var id =  parseInt(arr[1]);
+                    var update = $("#" + CID).val();
+                        $.ajax({
+                            cache: false,
+                            url: '@Url.Action("EditRecord", "Home")',
+                            data: { Value: update,Name:name,ID:id },
+                            beforeSend: function () {
+
+                            },
+                            success: function (data) {
+                                Swal.fire({
+
+                                    icon: 'success',
+                                    title: 'Saved!',
+                                    showConfirmButton: false,
+                                    timer: 1000,
+                                    width: '500px',
+                                })
+                            },
+                        })
+
+                });
+            },
+        })
+    };
+
+    function addEntry(){
+        var a = $('#flexSwitchCheckDefault:checked').val();
+        if (a = "on") {
+            var Billable = true;
+        } else {
+            Billable = false;
+        }
+        var Date = $('#Date').val();
+        var Project = $('#Project').val();
+        var Detail = $('#Detail').val();
+        var STime = $('#StartTime').val();
+        var ETime = $('#EndTime').val();
+        var WorkHr = $('#WorkingHr').val();
+        $.ajax({
+            cache: false,
+            url: '@Url.Action("AddTrack", "Home")',
+            type: "POST",
+            data: { Project: Project, Date: Date, STime: STime, ETime: ETime, Detail: Detail, WorkHr: WorkHr, Billable: Billable },
+            beforeSend: function () {
+            },
+            success: function (data) {
+                if (data = "Ok") {
+                    list();
+                } else {
+                    alert(data);
+                }
+            },
+        });
+    }
+    function timepicker() {
+        new Picker(document.querySelector('.startTime'), {
+            format: 'HH:mm',
+            headers: true,
+            text: {
+                title: 'Pick a time',
+            },
+        });
+        new Picker(document.querySelector('.endTime'), {
+            format: 'HH:mm',
+            headers: true,
+            text: {
+                title: 'Pick a time',
+            },
+        });
+    }
+    function diff(start, end) {
+        start = start.split(":");
+        end = end.split(":");
+        var startDate = new Date(0, 0, 0, start[0], start[1], 0);
+        var endDate = new Date(0, 0, 0, end[0], end[1], 0);
+        var diff = endDate.getTime() - startDate.getTime();
+        var hours = Math.floor(diff / 1000 / 60 / 60);
+        diff -= hours * 1000 * 60 * 60;
+        var minutes = Math.floor(diff / 1000 / 60);
+
+        // for time pickers with 24 hours format, to get exact hours
+        //if (hours < 0)
+        //    hours = hours + 24;
+        var a = (hours <= 9 ? "0" : "") + hours + ":" + (minutes <= 9 ? "0" : "") + minutes;
+        return a;
+    }
+    $('.tcal').on('change', function () {
+        var st = $('#StartTime').val();
+        var et = $('#EndTime').val();
+        var a = diff(st, et);
+        if (a != "NaN:NaN") {
+            $('#WorkingHr').val(a);
+        } else {
+            $('#WorkingHr').val("00:00");
+        }
+    })
+        function deleteR(id) {
+            Swal.fire({
+                title: 'Do you want to delete the track record?',
+                showCancelButton: true,
+                confirmButtonText: `Delete`,
+                confirmButtonColor: '#ff261f',
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $.ajax({
+                        cache: false,
+                        url: '@Url.Action("DeleteRecord", "Home")',
+                        data: { ID: id },
+                        beforeSend: function () {
+
+                        },
+                        success: function (data) {
+                            list();
+                        }
+                    });
+                } else if (result.isDenied) {
+                    Swal.fire('Changes are not saved', '', 'info')
+                }
+            })
+    }
+
+    @*$(document).click((event) => {
+        if (!$(event.target).closest('.Rlist').length) {
+            $.ajax({
+            cache: false,
+            url: '@Url.Action("EditRecord", "Home")',
+            data: {ID:id},
+            beforeSend: function () {
+
+            },
+             success: function (data) {
+                 alert(data);
+                list();
+            }
+        })
+        }
+    });*@
+    </script>
+}
+
+@*<form id="TrackForm" onsubmit="Add()">
+        <div class="row">
+            <div class="col-md-4">
+                <input type="text" placeholder="Assignment.." class="form-control" id="CurrentWork" />
+            </div>
+            <div class="col-md-4">
+                <select type="text" placeholder="Project.." class="form-control" id="Project">
+                    <option value="LOL">LOL</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <input type="checkbox" class="" id="billable" /><span>Billable</span><br />
+            </div>
+        </div><br />
+        <div class="row">
+            <div class="col-md-4">
+                <input type="text" placeholder="From.." class="form-control" id="FDate" />
+            </div>
+            <div class="col-md-4">
+                <input type="text" placeholder="To.." class="form-control" id="TDate" /><br />
+            </div>
+            <div class="col-md-4">
+                <input type="button" value="Start" class="btn btn-info" />
+                <input type="button" value="Stop" class="btn btn-info" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6"> <input type="text" id="timer" class="form-control" placeholder="00:00:00" /></div>
+            <div id="t1"></div>
+            <div class="col-md-6">
+                <input class="btn btn-block btn-success" type="submit" value="Add">
+            </div>
+        </div>
+    </form>*@
+@*function timepicker() {
+        $('.timepicker').timepicker({
+            //plugin src - https://timepicker.co/
+            timeFormat: 'hh:mm:ss',
+            minTime: '8:00:00',// 11:45:00 AM
+            maxHour: 20,
+            maxMinutes: 30,
+            startTime: new Date(0, 0, 0, 15, 0, 0),// 3:00:00 PM - noon
+            interval: 15, // 15 minutes
+        });
+    }*@

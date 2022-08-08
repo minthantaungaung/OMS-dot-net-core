@@ -1,0 +1,64 @@
+﻿ @model OMSWEB.Models.Member
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="~/css/LoginStyle.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Otomanopee+One&display=swap" rel="stylesheet">
+    <title>Login</title>
+</head>
+<body>
+    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @id = "LoginForm" }))
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                    <div class="card card-signin my-5">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Sign In</h5>
+                            <form class="form-signin">
+                                <div class="form-label-group">
+                                    <input type="email" asp-for="Email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+                                    <label for="inputEmail">Email address</label>
+                                </div>
+
+                                <div class="form-label-group">
+                                    <input type="password" asp-for="Password" id="inputPassword" class="form-control" placeholder="Password" required>
+                                    <label for="inputPassword">Password</label>
+                                </div>
+
+                                <div class="custom-control custom-checkbox mb-3">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                    <label class="custom-control-label" for="customCheck1">Remember password</label>
+                                </div>
+                                <button class="btn btn-lg btn-primary btn-block " type="submit">Sign in</button>
+                                <hr class="my-4">
+                                @{
+                                    if (ViewBag.error == "Unauthorize")
+                                    {
+                                        <div class="form-group">
+                                            <h6 class="text-warning text-center">Error</h6>
+                                        </div> }
+                                }
+                                <div class="row ml-sm-1">
+                                    <button class="btn btn-google " type="submit"><i class="fab fa-google mr-2"></i>  Google</button> &nbsp;
+                                    <button class="btn btn-facebook" type="submit"><i class="fab fa-facebook-f mr-2"></i> Facebook</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</body>
+</html>

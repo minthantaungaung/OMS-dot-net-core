@@ -1,0 +1,75 @@
+﻿@model IEnumerable<OMSWEB.Models.TrackRecord>
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+
+            <div class="card Rlist rounded-0">
+                <div class="card-body pr-sm-0 pt-sm-1 pb-sm-0">
+                    <form id="Rlist-@item.Id">
+                        <div class="text-danger"></div>
+                        <div class="row ">
+                            <div class="col input-group-sm  mt-3 form-group">
+                                <input type="text" asp-for="@item.Detail" id="Detail-@item.Id" class="form-control bg-transparent border-0 rounded-0" />
+                            </div>
+                            <div class="col input-group-sm  mt-3 form-group">
+                                <input type="text" asp-for="@item.Project" id="Project-@item.Id" class="form-control bg-transparent border-0 rounded-0" />
+                            </div>
+                            <div class="col input-group-sm mt-3 form-group">
+                                <input type="date" asp-for="@item.Date" id="Date-@item.Id" class="form-control bg-transparent border-0 rounded-0" />
+                            </div>
+
+                            <div class="col input-group-sm mt-3 form-group">
+                                <input type="text" asp-for="@item.StartTime" id="StartTime-@item.Id" class="form-control js-time-picker bg-transparent startTime rounded-0" />
+                            </div>
+                            <div class="col input-group-sm mt-3 form-group">
+                                <input type="text" asp-for="@item.EndTime" id="EndTime-@item.Id" class="form-control js-time-picker bg-transparent endTime rounded-0" />
+                            </div>
+                            <div class="col input-group-sm mt-3 form-group">
+                                <input type="text" asp-for="@item.WorkingHr" id="WorkingHr-@item.Id" class="form-control bg-transparent border-0 rounded-0" />
+                            </div>
+                            <div class="col input-group-sm form-group">
+                                @{
+                                    if (item.Billable == true)
+                                    {
+                                        <div class="form-check mt-3">
+                                            <input class="form-check-input" type="checkbox" value="" id="Billable-@item.Id" checked>
+                                            <label class="form-check-label" for="Billable-@item.Id">Billable</label>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="form-check form-switch mt-3">
+                                            <input class="form-check-input" type="checkbox" id="Billable-@item.Id">
+                                            <label class="form-check-label" for="Billable-@item.Id">Billable</label>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <div class="col-1 form-group mt-2">
+                                <span type="button" class="pl-2 pr-2 pb-1 pt-1 icon-redhover1">
+                                    <i class="fas fa-trash-alt text-danger" onclick="deleteR(@item.Id)"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <button id="hiddenEdit-@item.Id" onclick="editR()" hidden></button>
+                        @Html.HiddenFor(modelItem => item.Id)
+                        @Html.HiddenFor(modelItem => item.IsDeleted)
+                    </form>
+                </div>
+            </div>
+            <br />
+            <div class="col-md-12">
+                @*<div class="pagedList" style="text-align:center">
+                    @Html.PagedListPager(Model.Result, page => Url.Action("_ContributeList", "Contribute",
+                             new { page }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+                </div>
+                <br />*@
+            </div>
+        }
+        }
+    </div>
+</div>
+
+
+

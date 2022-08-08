@@ -1,0 +1,175 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor;
+@using System.Security.Claims;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] | OMSWEB</title>
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
+    <script src="~/lib/font-awesome/js/all.js"></script>
+    <link href="~/css/style.css" rel="stylesheet" />
+    <script src="~/js/script.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+</head>
+ @{
+    var name = HttpContextAccessor.HttpContext.User.FindFirst("Name")?.Value;
+    //var Position = HttpContextAccessor.HttpContext.User.FindFirst("CompanyName")?.Value;
+}
+<body>
+
+    <div class="page-wrapper chiller-theme toggled">
+        <a id="show-sidebar" class="btn btn-sm" href="#">
+            <i class="fa fa-caret-right fa-2x text-white "></i>
+        </a>
+        <nav id="sidebar" class="sidebar-wrapper ">
+            <div class="sidebar-content">
+                <div class="sidebar-brand">
+                    <a href="#" class="ml-5 text-white ">Pro (OMS)</a>
+                    <div id="close-sidebar">
+                        <i class="fa fa-times"></i>
+                    </div>
+                </div>
+                <div class="sidebar-header border-bottom">
+                    <div class="user-pic">
+                        <img class="img-responsive" src="~/image/ppl.png"
+                             alt="User picture">
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">
+                            <strong>
+                                @if (HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+                                {
+                                    @name
+                                }
+                            </strong>
+                        </span>
+                        <span class="user-role">Administrator</span>
+                        <span class="user-status">
+                            <i class="fas fa-circle text-success"></i>
+                            <span>Online</span>
+                        </span>
+                    </div>
+                </div>
+                <!-- sidebar-header  -->
+                @*<div class="sidebar-search">
+                        <div>
+                            <div class="input-group">
+                                <input type="text" class="form-control search-menu" placeholder="Search...">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+                <!-- sidebar-search  -->
+                <div class="sidebar-menu">
+                    <ul>
+                        <li class="header-menu">
+                            <span>General</span>
+                        </li>
+                        <li class="dash-item">
+                            <a href="#">
+                                <span class="item-wrap"> <i class="fas fa-home"></i></span>
+                                <span class="ml-2">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="dash-item">
+                            <a href="#">
+                                <span class="item-wrap"><i class="fas fa-chart-bar"></i></span>
+                                <span class="ml-2">Chart</span>
+                            </a>
+                        </li>
+                        <li class="header-menu">
+                            <span>Payment</span>
+                        </li>
+                        <li class="dash-item">
+                            <a href="#">
+                                <span class="item-wrap"> <i class="fa fa-book-open"></i></span>
+                                <span  class="ml-2">Documentation</span>
+                               
+                            </a>
+                        </li>
+
+                        <li class="dash-item"> 
+                            <a href="#">
+                                <span class="item-wrap"> <i class="fa fa-folder"></i></span>
+                                <span  class="ml-2">Examples</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- sidebar-menu  -->
+            </div>
+            <!-- sidebar-content  -->
+            <div class="sidebar-footer pt-2" style="background:linear-gradient(90deg, rgba(2,0,36,0.19091386554621848) 0%, rgba(226,83,210,0.3925945378151261) 41%, rgba(0,212,255,0.15449929971988796) 100%)" >
+                <a href="#">
+                    <i class="fa fa-bell"></i>
+                    <span class="badge badge-pill badge-warning notification">3</span>
+                </a>
+                <a href="#">
+                    <i class="fa fa-envelope"></i>
+                    <span class="badge badge-pill badge-success notification">7</span>
+                </a>
+                <a href="#">
+                    <i class="fa fa-cog"></i>
+                    <span class="badge-sonar"></span>
+                </a>
+                <a href="#">
+                    <i class="fa fa-power-off"></i>
+                </a>
+            </div>
+        </nav>
+        <main class="page-content" style="margin-top:-2%;">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/popper.js/dist/esm/popper.js"></script>
+    <script src="~/lib/cdnjs/bootstrap.js"></script>
+    @*<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/esm/popper.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/js/bootstrap.js'></script>*@
+    <script>
+        $(".sidebar-dropdown > a").click(function () {
+            $(".sidebar-submenu").slideUp(200);
+            if (
+                $(this)
+                    .parent()
+                    .hasClass("active")
+            ) {
+                $(".sidebar-dropdown").removeClass("active");
+                $(this)
+                    .parent()
+                    .removeClass("active");
+            } else {
+                $(".sidebar-dropdown").removeClass("active");
+                $(this)
+                    .next(".sidebar-submenu")
+                    .slideDown(200);
+                $(this)
+                    .parent()
+                    .addClass("active");
+            }
+            time();
+        });
+
+        $("#close-sidebar").click(function () {
+            $(".page-wrapper").removeClass("toggled");
+        });
+        $("#show-sidebar").click(function () {
+            $(".page-wrapper").addClass("toggled");
+        });
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
